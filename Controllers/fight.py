@@ -48,44 +48,45 @@ def start(player1, player2):
         player_turn(player1, player2)
         player_turn(player2, player1)
 
-        if player1.actual_hp > 0 and player2.actual_hp > 0:
-            result(player1, player2)
-
     declare_winner(player1, player2)
 
 
 def player_turn(player, target):
     if player.actual_hp > 0 and target.actual_hp > 0:
-        print(player.pokemon_name + ', à toi de jouer !')
+        print(f'{player.pokemon_name}, à toi de jouer ! Il reste {target.actual_hp} PV à {target.pokemon_name}')
+        print(player.name + f', quelle attaque voulez-vous utiliser avec {player.pokemon_name} ?\n')
 
-        attack_choice = ''
-        damage = 0
+        index = -1
 
-        while not attack_choice.isdigit():
-
-            print(player.name + f', quelle attaque voulez-vous utiliser avec {player.pokemon_name} ?\n')
+        while index == -1:
 
             for atk in player.atkList:
-                print(str(player.atkList.index(atk) + 1) + f'. {atk}')
+                print(f'{player.atkList.index(atk) + 1}. {atk}')
 
-            attack_choice = input()
-            index = int(attack_choice) - 1
-            damage = attacks_damage.get(player.atkList[index])
-            target.actual_hp -= damage
-            print()
+            attack_choice = input('> ')
+            attack_number = len(player.atkList)
 
-            if not str(attack_choice).isdigit():
-                attack_choice = ''
-                print("Veuillez saisir le numéro d'une attaque valide.")
+            if str(attack_choice).isdigit():
+                index = int(attack_choice) - 1
+                if index >= attack_number or index < 0:
+                    index = -1
+                    print("Veuillez saisir le nom ou numéro d'une attaque valide.")
+            else:
+                if attack_choice in player.atkList:
+                    index = player.atkList.index(attack_choice)
+                else:
+                    index = -1
+                    print("Veuillez saisir le nom ou numéro d'une attaque valide.")
 
-        # todo : gérer le cas où le numéro d'attaque sélectionné est out of bound
+        damage = attacks_damage.get(player.atkList[index])
+        target.actual_hp -= damage
 
-        print(f'{player.name} attaque {target.name} avec {player.atkList[index]}, qui perd {str(damage)} PV.\n')
+        print(f'\n{player.name} attaque {target.name} avec {player.atkList[index]}, qui perd {str(damage)} PV.\n')
 
 
-def result(player1, player2):
-    msg1 = f'{player1.pokemon_name} a {player1.print_hp()} PV'
-    msg2 = f'{player2.pokemon_name} a {player2.print_hp()} PV'
+def result(winner, loser):
+    msg1 = f'{loser.pokemon_name} est KO. {winner.name} remporte le combat ! '
+    msg2 = f'{winner.pokemon_name} gagne {randrange(20, 99)} EXP.'
     max_size = max(len(msg1), len(msg2))
     msg1 += ' ' * (max_size - len(msg1))
     msg2 += ' ' * (max_size - len(msg2))
@@ -104,5 +105,4 @@ def declare_winner(player1, player2):
         winner = player2
         loser = player1
 
-    print(f'{loser.pokemon_name} est KO. {winner.name} remporte le combat ! '
-          f'\n{winner.pokemon_name} gagne {randrange(20, 99)} EXP.')
+    result(winner, loser)

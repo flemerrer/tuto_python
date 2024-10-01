@@ -6,16 +6,16 @@
 from Controllers import fight
 
 if __name__ == '__main__':
-    pokemon1 = pokemon_fight.select_monster('pythachu')
-    pokemon2 = pokemon_fight.select_monster('pythard')
+    pokemon1 = fight.select_monster('pythachu')
+    pokemon2 = fight.select_monster('pythard')
 
     name1 = 'Sachant'
     name2 = 'Regissseur'
 
-    player1 = pokemon_fight.create_player(name1.upper(), pokemon1)
-    player2 = pokemon_fight.create_player(name2.upper(), pokemon2)
+    player1 = fight.create_player(name1.upper(), pokemon1)
+    player2 = fight.create_player(name2.upper(), pokemon2)
 
-    pokemon_fight.start(player1, player2)
+    fight.start(player1, player2)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 
